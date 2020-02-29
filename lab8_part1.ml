@@ -90,7 +90,7 @@ module MakeInterval (Endpoint : ORDERED_TYPE) =
   struct
     type interval =
       | Interval of Endpoint.t * Endpoint.t
-      | Empty  
+      | Empty
 
     (* create low high -- Returns a new interval covering `low` to
        `high` inclusive. If `low` is greater than `high`, then the
@@ -132,7 +132,11 @@ Exercise 1B: Using the completed functor above, instantiate an integer
 interval module.
 ......................................................................*)
 
-module IntInterval (Endpoint : ORDERED_TYPE)= struct end ;;
+module IntInterval =
+  MakeInterval (struct 
+                  type t = int 
+                  let compare = Stdlib.compare
+                end) ;;
 
 (*......................................................................
 Exercise 1C: Using your newly created integer interval module, create
@@ -192,6 +196,8 @@ MakeInterval above.) **Don't forget to specify the module type.**
 ......................................................................*)
 
 module MakeSafeInterval (Endpoint : ORDERED_TYPE) : INTERVAL =
+
+  (* The rest of the implementation is just as before. *)
   struct
     type endpoint = Endpoint.t
     type interval =
@@ -232,6 +238,7 @@ module MakeSafeInterval (Endpoint : ORDERED_TYPE) : INTERVAL =
          let (_, low), (high, _)  = ordered low1 low2, ordered high1 high2 in
          create low high
   end
+;;
 
 (* We have successfully made our returned module abstract, but believe
 it or not, it is now too abstract. In fact, we have not exposed the
